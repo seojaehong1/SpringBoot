@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.home0925.mapper.ProductMapper">
+
+    <!-- ProductDTO ResultMap -->
+    <resultMap id="ProductResultMap" type="com.example.home0925.domain.ProductDTO">
+        <id property="itemId" column="item_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="shopLocation" column="shop_location"/>
+        <result property="name" column="name"/>
+        <result property="brand" column="brand"/>
+        <result property="soldQuantity" column="sold_quantity"/>
+        <result property="stock" column="stock"/>
+        <result property="discountPrice" column="discount_price"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="discount" column="discount"/>
+        <result property="likedCount" column="liked_count"/>
+        <result property="ratingStar" column="rating_star"/>
+        <result property="numberOfRatings" column="number_of_ratings"/>
+        <result property="productImageLink" column="product_image_link"/>
+        <result property="reviewCount" column="review_count"/>
+    </resultMap>
+
+    <!-- 모든 상품 조회 -->
+    <select id="selectAllProducts" resultMap="ProductResultMap">
+        SELECT
+            p.item_id,
+            p.shop_id,
+            p.shop_location,
+            p.name,
+            pd.brand,
+            pd.sold_quantity,
+            pd.stock,
+            pd.discount_price,
+            pd.original_price,
+            pd.discount,
+            pd.liked_count,
+            pd.rating_star,
+            pd.number_of_ratings,
+            pd.product_image_link,
+            0 as review_count
+        FROM products p
+                 INNER JOIN product_details pd ON p.item_id = pd.item_id
+        ORDER BY p.item_id DESC
+    </select>
+
+    <!-- 전체 상품 개수 -->
+    <select id="selectTotalProductCount" resultType="int">
+        SELECT COUNT(*) FROM products
+    </select>
+
+    <!-- 브랜드 목록 -->
+    <select id="selectAllBrands" resultType="String">
+        SELECT DISTINCT brand FROM product_details WHERE brand IS NOT NULL ORDER BY brand
+    </select>
+
+    <!-- 지역 목록 -->
+    <select id="selectAllLocations" resultType="String">
+        SELECT DISTINCT shop_location FROM products WHERE shop_location IS NOT NULL ORDER BY shop_location
+    </select>
+
+    <!-- CategoryCountDTO 임시 구현 -->
+    <select id="selectProductCountByBrand" resultType="map">
+        SELECT brand as category, COUNT(*) as count
+        FROM product_details
+        WHERE brand IS NOT NULL
+        GROUP BY brand
+        ORDER BY count DESC
+    </select>
+
+    <select id="selectProductCountByLocation" resultType="map">
+        SELECT shop_location as category, COUNT(*) as count
+        FROM products
+        WHERE shop_location IS NOT NULL
+        GROUP BY shop_location
+        ORDER BY count DESC
+    </select>
+
+</mapper>

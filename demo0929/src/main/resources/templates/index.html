@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 및 정보 페이지</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 900px;
+            display: flex;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .info-section {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            border-left: 1px solid #ddd;
+            display: none; /* 초기에는 숨겨둠 */
+        }
+        .info-section.active {
+            display: block; /* 회원가입 완료 후 표시 */
+        }
+        h2 {
+            color: #333;
+        }
+        input, button {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-section" id="join-form">
+        <h2>회원가입</h2>
+        <form action="/api/users/join" method="post">
+            <input type="text" name="username" placeholder="아이디" required>
+            <input type="password" name="password" placeholder="비밀번호" required>
+            <input type="password" name="passwordConfirm" placeholder="비밀번호 재확인" required>
+            <input type="email" name="email" placeholder="이메일" required>
+            <input type="text" name="nickname" placeholder="닉네임" required>
+            <button type="submit">회원가입</button>
+        </form>
+    </div>
+
+    <div class="info-section" id="user-info-section">
+        <h2 id="welcome-message"></h2>
+        <h3>내 정보</h3>
+        <p><strong>아이디:</strong> <span id="display-username"></span></p>
+        <p><strong>이메일:</strong> <span id="display-email"></span></p>
+        <p><strong>닉네임:</strong> <span id="display-nickname"></span></p>
+
+        <hr>
+
+        <h3>정보 수정</h3>
+        <form action="/api/users/update-profile" method="put">
+            <input type="email" name="newEmail" placeholder="새로운 이메일">
+            <input type="text" name="newNickname" placeholder="새로운 닉네임">
+            <button type="submit">정보 수정</button>
+        </form>
+
+        <hr>
+
+        <h3>비밀번호 수정</h3>
+        <form action="/api/users/change-password" method="put">
+            <input type="password" name="currentPassword" placeholder="현재 비밀번호" required>
+            <input type="password" name="newPassword" placeholder="새 비밀번호" required>
+            <input type="password" name="newPasswordConfirm" placeholder="새 비밀번호 재확인" required>
+            <button type="submit">비밀번호 변경</button>
+        </form>
+
+        <hr>
+
+        <h3>회원 탈퇴</h3>
+        <form action="/api/users/withdraw" method="delete">
+            <input type="password" name="password" placeholder="비밀번호 확인" required>
+            <button type="submit">회원 탈퇴</button>
+        </form>
+    </div>
+</div>
+<script>
+    // 이 부분은 JavaScript를 사용하여 AJAX 요청을 처리하고 DOM을 조작해야 합니다.
+    // 현재는 서버사이드 타임리프 렌더링만 가정하여 뼈대만 제공합니다.
+</script>
+</body>
+</html>

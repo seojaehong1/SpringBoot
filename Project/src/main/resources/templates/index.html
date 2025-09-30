@@ -1,0 +1,108 @@
+<body>
+
+<h1>All Products</h1>
+
+<form action="/" method="get">
+    <input type="text" name="keyword" placeholder="상품명으로 검색" th:value="${param.keyword}">
+    <button type="submit">검색</button>
+</form>
+
+<br>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${product}">
+        <td><a th:href="@{/add-product(id=${p.id})}" th:text="${p.id}"></a></td>
+        <td th:text="${p.productName}"></td>
+        <td th:text="${p.quantity}"></td>
+        <td>
+            <form th:action="@{/delete-product}" th:method="post">
+                <input type="hidden" name="id" th:value="${p.id}" />
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+
+<a href="/add-product">
+    <button>상품 추가</button>
+</a>
+
+<br>
+
+<div class="chart-container">
+    <canvas id="productChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
+    // Thymeleaf의 데이터를 JavaScript로 전달
+    const products = [[${product}]];
+
+    // 차트 데이터 준비
+    const productNames = products.map(p => p.productName);
+    const quantities = products.map(p => p.quantity);
+
+    const data = {
+        labels: productNames,
+        datasets: [{
+            label: 'Product Quantity',
+            data: quantities,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // 차트 옵션 설정
+    const config = {
+        type: 'bar', // 막대 차트
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // 라벨 숨기기
+                }
+            }
+        }
+    };
+
+    // 차트 생성
+    const productChart = new Chart(
+        document.getElementById('productChart'),
+        config
+    );
+</script>
+
+</body>
